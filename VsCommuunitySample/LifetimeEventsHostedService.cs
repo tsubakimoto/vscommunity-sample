@@ -1,4 +1,6 @@
-﻿using Microsoft.Extensions.Hosting;
+﻿using Microsoft.ApplicationInsights;
+using Microsoft.ApplicationInsights.DataContracts;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System.Threading;
 using System.Threading.Tasks;
@@ -9,17 +11,22 @@ namespace VsCommuunitySample
     {
         private readonly ILogger _logger;
         private readonly IHostApplicationLifetime _appLifetime;
+        private readonly TelemetryClient _tc;
 
         public LifetimeEventsHostedService(
             ILogger<LifetimeEventsHostedService> logger,
-            IHostApplicationLifetime appLifetime)
+            IHostApplicationLifetime appLifetime,
+            TelemetryClient tc)
         {
             _logger = logger;
             _appLifetime = appLifetime;
+            _tc = tc;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("StartAsync has been called.");
+
             _appLifetime.ApplicationStarted.Register(OnStarted);
             _appLifetime.ApplicationStopping.Register(OnStopping);
             _appLifetime.ApplicationStopped.Register(OnStopped);
@@ -29,12 +36,19 @@ namespace VsCommuunitySample
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
+            _logger.LogInformation("StopAsync has been called.");
+
             return Task.CompletedTask;
         }
 
         private void OnStarted()
         {
-            _logger.LogInformation("OnStarted has been called.");
+            using (_tc.StartOperation<RequestTelemetry>("operation"))
+            {
+                _logger.LogInformation("OnStarted has been called. (appsettings.json)");
+                _tc.TrackEvent("OnStarted event has finised. (appsettings.json)");
+                _tc.Flush();
+            }
 
             // Perform post-startup activities here
         }

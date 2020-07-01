@@ -15,6 +15,7 @@ namespace VsCommuunitySample
                 .ConfigureServices((hostContext, services) =>
                 {
                     services.AddHostedService<LifetimeEventsHostedService>();
+                    services.AddApplicationInsightsTelemetryWorkerService();
                 });
     }
 }
