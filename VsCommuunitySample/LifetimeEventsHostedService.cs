@@ -25,11 +25,16 @@ namespace VsCommuunitySample
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("StartAsync has been called.");
+            using (_tc.StartOperation<RequestTelemetry>("operation at StartAsync"))
+            {
+                _logger.LogInformation("StartAsync has been called.");
 
-            _appLifetime.ApplicationStarted.Register(OnStarted);
-            _appLifetime.ApplicationStopping.Register(OnStopping);
-            _appLifetime.ApplicationStopped.Register(OnStopped);
+                _appLifetime.ApplicationStarted.Register(OnStarted);
+                _appLifetime.ApplicationStopping.Register(OnStopping);
+                _appLifetime.ApplicationStopped.Register(OnStopped);
+
+                _tc.TrackEvent("StartAsync event has finished.");
+            }
 
             return Task.CompletedTask;
         }
@@ -43,33 +48,24 @@ namespace VsCommuunitySample
 
         private void OnStarted()
         {
-            using (_tc.StartOperation<RequestTelemetry>("operation at OnStarted"))
-            {
-                _logger.LogInformation("OnStarted has been called.");
-                _tc.TrackEvent("OnStarted event has finished.");
-            }
+            _logger.LogInformation("OnStarted has been called.");
+            _tc.TrackEvent("OnStarted event has finished.");
 
             // Perform post-startup activities here
         }
 
         private void OnStopping()
         {
-            using (_tc.StartOperation<RequestTelemetry>("operation at OnStopping"))
-            {
-                _logger.LogInformation("OnStopping has been called.");
-                _tc.TrackEvent("OnStopping event has finished.");
-            }
+            _logger.LogInformation("OnStopping has been called.");
+            _tc.TrackEvent("OnStopping event has finished.");
 
             // Perform on-stopping activities here
         }
 
         private void OnStopped()
         {
-            using (_tc.StartOperation<RequestTelemetry>("operation at OnStopped"))
-            {
-                _logger.LogInformation("OnStopped has been called.");
-                _tc.TrackEvent("OnStopped event has finished.");
-            }
+            _logger.LogInformation("OnStopped has been called.");
+            _tc.TrackEvent("OnStopped event has finished.");
 
             _tc.Flush();
 
