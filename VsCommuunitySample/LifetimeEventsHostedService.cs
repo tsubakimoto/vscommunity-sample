@@ -43,11 +43,10 @@ namespace VsCommuunitySample
 
         private void OnStarted()
         {
-            using (_tc.StartOperation<RequestTelemetry>("operation"))
+            using (_tc.StartOperation<RequestTelemetry>("operation at OnStarted"))
             {
-                _logger.LogInformation("OnStarted has been called. (appsettings.json)");
-                _tc.TrackEvent("OnStarted event has finished. (appsettings.json)");
-                _tc.Flush();
+                _logger.LogInformation("OnStarted has been called.");
+                _tc.TrackEvent("OnStarted event has finished.");
             }
 
             // Perform post-startup activities here
@@ -55,14 +54,27 @@ namespace VsCommuunitySample
 
         private void OnStopping()
         {
-            _logger.LogInformation("OnStopping has been called.");
+            using (_tc.StartOperation<RequestTelemetry>("operation at OnStopping"))
+            {
+                _logger.LogInformation("OnStopping has been called.");
+                _tc.TrackEvent("OnStopping event has finished.");
+            }
 
             // Perform on-stopping activities here
         }
 
         private void OnStopped()
         {
-            _logger.LogInformation("OnStopped has been called.");
+            using (_tc.StartOperation<RequestTelemetry>("operation at OnStopped"))
+            {
+                _logger.LogInformation("OnStopped has been called.");
+                _tc.TrackEvent("OnStopped event has finished.");
+            }
+
+            _tc.Flush();
+
+            // https://github.com/microsoft/ApplicationInsights-dotnet/issues/407
+            Task.Delay(5000).Wait();
 
             // Perform post-stopped activities here
         }
