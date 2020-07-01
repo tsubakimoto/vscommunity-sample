@@ -46,7 +46,7 @@ namespace VsCommuunitySample
             using (_tc.StartOperation<RequestTelemetry>("operation"))
             {
                 _logger.LogInformation("OnStarted has been called. (appsettings.json)");
-                _tc.TrackEvent("OnStarted event has finised. (appsettings.json)");
+                _tc.TrackEvent("OnStarted event has finished. (appsettings.json)");
                 _tc.Flush();
             }
 
