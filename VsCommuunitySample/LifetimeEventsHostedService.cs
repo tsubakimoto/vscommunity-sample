@@ -47,6 +47,7 @@ namespace VsCommuunitySample
         private void OnStarted()
         {
             _logger.LogWarning("OnStarted has been called.");
+            _appLifetime.StopApplication(); // Shutdown
 
             // Perform post-startup activities here
         }
