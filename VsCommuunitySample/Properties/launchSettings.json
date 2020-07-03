@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "VsCommuunitySample": {
+      "commandName": "Project"
+    },
+    "Docker": {
+      "commandName": "Docker"
+    }
+  }
+}
