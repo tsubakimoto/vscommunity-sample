@@ -27,13 +27,11 @@ namespace VsCommuunitySample
         {
             using (_tc.StartOperation<RequestTelemetry>("operation at StartAsync"))
             {
-                _logger.LogInformation("StartAsync has been called.");
+                _logger.LogWarning("StartAsync has been called.");
 
                 _appLifetime.ApplicationStarted.Register(OnStarted);
                 _appLifetime.ApplicationStopping.Register(OnStopping);
                 _appLifetime.ApplicationStopped.Register(OnStopped);
-
-                _tc.TrackEvent("StartAsync event has finished.");
             }
 
             return Task.CompletedTask;
@@ -41,31 +39,28 @@ namespace VsCommuunitySample
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("StopAsync has been called.");
+            _logger.LogWarning("StopAsync has been called.");
 
             return Task.CompletedTask;
         }
 
         private void OnStarted()
         {
-            _logger.LogInformation("OnStarted has been called.");
-            _tc.TrackEvent("OnStarted event has finished.");
+            _logger.LogWarning("OnStarted has been called.");
 
             // Perform post-startup activities here
         }
 
         private void OnStopping()
         {
-            _logger.LogInformation("OnStopping has been called.");
-            _tc.TrackEvent("OnStopping event has finished.");
+            _logger.LogWarning("OnStopping has been called.");
 
             // Perform on-stopping activities here
         }
 
         private void OnStopped()
         {
-            _logger.LogInformation("OnStopped has been called.");
-            _tc.TrackEvent("OnStopped event has finished.");
+            _logger.LogWarning("OnStopped has been called.");
 
             _tc.Flush();
 
